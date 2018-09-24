@@ -30,20 +30,26 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ *  Example microservice to demonstrate deploying spring boot services to Kubernetes
+ */
+
 @RestController
 public class MicroserviceController {
 
-    @Value("${UPSTREAM_URI:https//jsonplaceholder.typicode.com/users/1")
+    @Value("${UPSTREAM_URI:http://jsonplaceholder.typicode.com/users/1}")
     private String uri;
 
     @Value("${SERVICE_NAME:frontend}")
     private String serviceName;
 
-
+    /**
+     * Sample rest endpoint that queries an upstream URL
+     *
+     * @return Output request body of the upstream URL
+     */
     @RequestMapping("/")
     public String request() {
-
-        System.out.println("Hitting Endpoint");
         long startTime = System.currentTimeMillis();
 
         RestTemplate restTemplate = new RestTemplate();
@@ -67,6 +73,12 @@ public class MicroserviceController {
 
     }
 
+    /**
+     * Rest endpoint that forwards headers along
+     *
+     * @param headers header from incoming request
+     * @return Output of the body of the upstream URL
+     */
     @RequestMapping("/v1")
     public String headersRequest(@RequestHeader HttpHeaders headers) {
 
@@ -78,8 +90,6 @@ public class MicroserviceController {
         extractHeader(headers, tracingHeaders, "x-b3-sampled");
         extractHeader(headers, tracingHeaders, "x-b3-flags");
         extractHeader(headers, tracingHeaders, "x-ot-span-context");
-        extractHeader(headers, tracingHeaders, "x-dev-user");
-        extractHeader(headers, tracingHeaders, "fail");
 
         long startTime = System.currentTimeMillis();
 
@@ -89,7 +99,7 @@ public class MicroserviceController {
 
 
         try {
-            ResponseEntity<String> resp = restTemplate.exchange(uri + "v1", HttpMethod.GET, new HttpEntity<>(tracingHeaders), String.class);
+            ResponseEntity<String> resp = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(tracingHeaders), String.class);
             long timeSpent = System.currentTimeMillis() - startTime;
 
             res.append(serviceName).append("[v1]").append("-").append(timeSpent).append("ms").append("\n");
@@ -104,6 +114,13 @@ public class MicroserviceController {
 
     }
 
+    /**
+     * Extract keys from inbound headers and propagate forward
+     *
+     * @param headers inbound headers to read from
+     * @param extracted header list to populate
+     * @param key key of header to extract
+     */
 
     private static void extractHeader(HttpHeaders headers, HttpHeaders extracted, String key) {
         List<String> vals = headers.get(key);

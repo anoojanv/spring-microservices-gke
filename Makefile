@@ -46,7 +46,7 @@ autoscale:
 switch-context:
 	kubectl config use-context gke_${PROJECT_ID}_${ZONE}_${CLUSTER_NAME}
 
-start-monitoring-services:
+start-monitoring:
 	$(shell kubectl -n istio-system port-forward $(JAEGER_POD_NAME) 16686:16686 & kubectl -n istio-system port-forward $(SERVICEGRAPH_POD_NAME) 8088:8088 & kubectl -n istio-system port-forward $(GRAFANA_POD_NAME) 3000:3000 & kubectl -n istio-system port-forward $(PROMETHEUS_POD_NAME) 9090:9090)
 
 get-stuff:

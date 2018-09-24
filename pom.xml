@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>microservice</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Demo spring boot microservice to run on GKE</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

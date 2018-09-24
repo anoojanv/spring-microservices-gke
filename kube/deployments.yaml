@@ -32,5 +32,5 @@ spec:
         - name: SERVICE_NAME
           value: "frontend-prod"
         - name: UPSTREAM_URI
-          value: "http://time.jsontest.com/"
+          value: "http://jsonplaceholder.typicode.com/users/1"
 
