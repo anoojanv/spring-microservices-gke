@@ -16,7 +16,7 @@ metadata:
   name: jsontime
 spec:
   hosts:
-  - jsonplaceholder.typicode.com/users/1
+  - jsonplaceholder.typicode.com
   ports:
   - number: 80
     name: http
